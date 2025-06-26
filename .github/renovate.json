@@ -17,18 +17,22 @@
   "includePaths": [
     "drake_pip/**",
     "drake_poetry/**",
-    "drake_bazel_download/**"
+    "drake_bazel_download/**",
+    "drake_bazel_external/**"
   ],
   "packageRules": [
     {
       "matchPackageNames": [
-        "drake"
+        "apple_support"
       ],
-      "rangeStrategy": "bump"
+      "enabled": false
     },
     {
-      "matchFileNames": [
-        "/drake_bazel_download/\\.bazelversion$"
+      "matchManagers": [
+        "pip_requirements",
+        "poetry",
+        "bazelisk",
+        "bazel-module"
       ],
       "rangeStrategy": "bump"
     }
