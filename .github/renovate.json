@@ -25,7 +25,7 @@
       "matchPackageNames": [
         "apple_support"
       ],
-      "enabled": "false"
+      "enabled": false
     },
     {
       "matchManagers": [
