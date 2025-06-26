@@ -8,18 +8,21 @@
     "at any time"
   ],
   "timezone": "America/New_York",
-  "enabledManagers": [
-    "pip_requirements",
-    "poetry"
-  ],
   "includePaths": [
     "drake_pip/**",
-    "drake_poetry/**"
+    "drake_poetry/**",
+    "drake_bazel_download/**"
   ],
   "packageRules": [
     {
       "matchPackageNames": [
         "drake"
+      ],
+      "rangeStrategy": "bump"
+    },
+    {
+      "matchFileNames": [
+        "/drake_bazel_download/\\.bazelversion$"
       ],
       "rangeStrategy": "bump"
     }
