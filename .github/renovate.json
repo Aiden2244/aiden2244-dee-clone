@@ -16,37 +16,7 @@
     "drake_pip/**",
     "drake_poetry/**"
   ],
-  "pip_requirements": {
-    "managerFilePatterns": [
-      "/drake_pip/requirements\\.txt$/"
-    ]
-  },
-  "poetry": {
-    "managerFilePatterns": [
-      "/drake_poetry/pyproject\\.toml$/"
-    ]
-  },
   "packageRules": [
-    {
-      "matchManagers": [
-        "pip_requirements"
-      ],
-      "matchFileNames": [
-        "drake_pip/requirements.txt"
-      ],
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "pip-deps"
-    },
-    {
-      "matchManagers": [
-        "poetry"
-      ],
-      "matchFileNames": [
-        "drake_poetry/pyproject.toml"
-      ],
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "poetry-deps"
-    },
     {
       "matchPackageNames": [
         "drake"
