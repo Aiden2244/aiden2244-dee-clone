@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# SPDX-License-Identifier: MIT-0
+
+set -euxo pipefail
+
+package_url=
+
+while [ "${1:-}" != "" ]; do
+  case "$1" in
+    --package-url)
+      shift
+      if [[ $# -eq 0 ]]; then
+        echo 'No argument specified for --package-url' >&2
+        exit 1
+      fi
+      package_url="$1"
+      ;;
+    *)
+      echo 'Invalid command line argument' >&2
+      exit 1
+  esac
+  shift
+done
+
+maybe_sudo=
+
+case "$OSTYPE" in
+    darwin*)
+    # Mac specific installations
+    if [[ "${EUID}" -eq 0 ]]; then
+      echo 'This script must NOT be run as root' >&2
+      exit 1
+    fi
+
+    # Download the drake source
+    curl -o drake.tar.gz "${package_url:-https://drake-packages.csail.mit.edu/drake/nightly/drake-latest-mac-arm64.tar.gz}"
+    trap 'rm -f drake.tar.gz' EXIT
+    tar -xf drake.tar.gz -C $HOME
+    ;;
+
+    linux*)
+    # Ubuntu specific installations
+    if [[ "${EUID}" -ne 0 ]]; then
+      maybe_sudo=sudo
+    fi
+
+    ${maybe_sudo} apt-get update
+    ${maybe_sudo} apt-get install --no-install-recommends lsb-release
+
+    if [[ "$(lsb_release -sc)" != 'noble' ]]; then
+      echo 'This script requires Ubuntu 24.04 (Noble)' >&2
+      exit 3
+    fi
+
+    ${maybe_sudo} apt-get install --no-install-recommends $(cat <<EOF
+      ca-certificates
+      wget
+EOF
+    )
+
+    # Download the drake source
+    wget -O drake.tar.gz "${package_url:-https://drake-packages.csail.mit.edu/drake/nightly/drake-latest-noble.tar.gz}"
+    trap 'rm -f drake.tar.gz' EXIT
+    tar -xf drake.tar.gz -C $HOME
+
+    ${maybe_sudo} apt-get install --no-install-recommends $(cat <<EOF
+      python3-dev
+EOF
+    )
+    ;;
+esac
+
+# Show version for debugging; use echo for newline / readability.
+echo -e "\ndrake VERSION.TXT: $(cat $HOME/drake/share/doc/drake/VERSION.TXT)\n"
+
+# Install the source prereqs
+${maybe_sudo} ${HOME}/drake/share/drake/setup/install_prereqs
