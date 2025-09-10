@@ -29,8 +29,7 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "apple_support",
-        "ubuntu",
+        "ubuntu"
       ],
       "enabled": false
     },
